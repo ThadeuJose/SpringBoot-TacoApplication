@@ -4,14 +4,25 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.CreditCardNumber;
 
+@Entity
+@Table(name="Taco_Order")
 public class Order {
    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
   
     private Date placedAt;
@@ -40,6 +51,7 @@ public class Order {
     //@Digits(integer=3, fraction=0, message="Invalid CVV")
     private String ccCVV;
     
+    @ManyToMany(targetEntity=Taco.class)
     private List<Taco> tacos = new ArrayList<>();
 
     public Order(){
@@ -118,12 +130,10 @@ public class Order {
         this.id = id;
     }
 
-    public Date getPlacedAt() {
-        return placedAt;
-    }
-
-    public void setPlacedAt(Date placedAt) {
-        this.placedAt = placedAt;
+    
+    @PrePersist
+    void placedAt() {
+        this.placedAt = new Date();
     }
 
     public void addDesign(Taco taco) {

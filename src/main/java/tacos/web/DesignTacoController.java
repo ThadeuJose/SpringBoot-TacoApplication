@@ -77,7 +77,13 @@ public class DesignTacoController {
         Taco saved = tacoRepository.save(design);
         order.addDesign(saved);
 
-        logger.info("Processing design: " + design);
+        String l = "";
+        for (Taco t : order.getTacos()) {
+            l+=t.getName();    
+        }        
+        logger.info("Processing list: "+l);
+
+        logger.info("Processing design: " + design.getName());
 
         return "redirect:/orders/current";
     }
